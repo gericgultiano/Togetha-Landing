@@ -575,7 +575,19 @@ const carouselRef = ref(null)
 let carouselObserver = null
 
 // APK download configuration
-const apkUrl = ref('/Togetha(Final Version).apk.apk') // Replace with your actual APK file path
+const apkUrl = ref('/Togetha(Final Version).apk') // APK file in public folder
+
+// Debug function to test file accessibility
+const testFileAccess = async () => {
+  try {
+    const response = await fetch(apkUrl.value)
+    console.log('File test response:', response.status, response.headers.get('content-type'))
+    return response.ok
+  } catch (error) {
+    console.error('File access test failed:', error)
+    return false
+  }
+}
 
 const next = () => {
   currentIndex.value = (currentIndex.value + 1) % slides.value.length
@@ -705,14 +717,62 @@ onBeforeUnmount(() => {
 // Methods
 
 
-const downloadApp = () => {
-  // Create a temporary link element to trigger APK download
-  const link = document.createElement('a')
-  link.href = apkUrl.value
-  link.download = 'Togetha(Final Version).apk'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+const downloadApp = async () => {
+  try {
+    console.log('Attempting to download from:', apkUrl.value)
+    
+    // Method 1: Try direct download link
+    const link = document.createElement('a')
+    link.href = apkUrl.value
+    link.download = 'Togetha-App.apk'
+    
+    // Set multiple attributes to ensure compatibility
+    link.setAttribute('type', 'application/vnd.android.package-archive')
+    link.setAttribute('target', '_blank')
+    link.setAttribute('rel', 'noopener noreferrer')
+    
+    // Add to DOM and trigger click
+    document.body.appendChild(link)
+    link.click()
+    
+    // Clean up after a short delay
+    setTimeout(() => {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link)
+      }
+    }, 1000)
+    
+    // Method 2: Fallback using fetch and blob (for browsers that block direct downloads)
+    setTimeout(async () => {
+      try {
+        const response = await fetch(apkUrl.value)
+        if (response.ok) {
+          const blob = await response.blob()
+          const url = window.URL.createObjectURL(blob)
+          const fallbackLink = document.createElement('a')
+          fallbackLink.href = url
+          fallbackLink.download = 'Togetha-App.apk'
+          document.body.appendChild(fallbackLink)
+          fallbackLink.click()
+          document.body.removeChild(fallbackLink)
+          window.URL.revokeObjectURL(url)
+          console.log('Fallback download method used')
+        }
+      } catch (fallbackError) {
+        console.error('Fallback download also failed:', fallbackError)
+        // Final fallback: just open the file in a new tab
+        window.open(apkUrl.value, '_blank')
+      }
+    }, 2000)
+    
+    console.log('Primary download method initiated')
+    
+  } catch (error) {
+    console.error('Download failed:', error)
+    // Last resort: open file URL in new window
+    window.open(apkUrl.value, '_blank')
+    alert('If the download doesn\'t start automatically, please right-click the opened file and select "Save As"')
+  }
 }
 
 // --- Contact form state & handler ---

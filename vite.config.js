@@ -15,4 +15,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    // Ensure static files are served with correct MIME types
+    middlewareMode: false,
+  },
+  assetsInclude: ['**/*.apk'], // Include APK files as assets
 })
