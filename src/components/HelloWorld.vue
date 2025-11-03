@@ -575,11 +575,8 @@ const carouselRef = ref(null)
 let carouselObserver = null
 
 // APK download configuration
-// Use local APK file that will be deployed with the site
-const apkUrl = ref('/Togetha(Final Version).apk')
-
-// Alternative: GitHub Release URL (if you prefer external hosting)
-// const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha(Final%20Version).apk')
+// Direct link to GitHub Release asset
+const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha(Final%20Version).apk')
 
 // Debug function to test file accessibility
 const testFileAccess = async () => {
@@ -722,22 +719,13 @@ onBeforeUnmount(() => {
 
 
 const downloadApp = () => {
-  // Simple and reliable download method
-  console.log('Initiating download from:', apkUrl.value)
+  // Direct download from GitHub Release - simple and reliable
+  console.log('Starting APK download from GitHub Release...')
   
-  // Create download link
-  const link = document.createElement('a')
-  link.href = apkUrl.value
-  link.download = 'Togetha-App.apk'
-  link.target = '_blank'
-  link.rel = 'noopener noreferrer'
+  // Use window.location.href for the most reliable cross-browser download
+  window.location.href = apkUrl.value
   
-  // Trigger download
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  
-  console.log('Download link clicked')
+  console.log('✅ Download initiated from:', apkUrl.value)
 }
 
 // --- Contact form state & handler ---
