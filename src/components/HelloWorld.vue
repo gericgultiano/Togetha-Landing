@@ -575,13 +575,11 @@ const carouselRef = ref(null)
 let carouselObserver = null
 
 // APK download configuration
-// Option 1: Use a cloud storage service (recommended)
-// Upload your APK to Google Drive, Dropbox, or another file hosting service
-// and get a direct download link
-const apkUrl = ref('https://drive.google.com/uc?export=download&id=YOUR_FILE_ID') // Replace with your actual download URL
+// Use local APK file that will be deployed with the site
+const apkUrl = ref('/Togetha(Final Version).apk')
 
-// Option 2: For development/local testing, use local file
-// const apkUrl = ref('/Togetha(Final Version).apk')
+// Alternative: GitHub Release URL (if you prefer external hosting)
+// const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha(Final%20Version).apk')
 
 // Debug function to test file accessibility
 const testFileAccess = async () => {

@@ -29,6 +29,5 @@ coverage
 
 *.tsbuildinfo
 
-# Large APK files
-*.apk
-public/*.apk
+# Note: APK file is included for deployment
+# If deploying to platforms with file size limits, use external hosting instead
