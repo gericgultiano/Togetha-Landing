@@ -545,7 +545,7 @@ const team = ref([
     avatar: null
   },
   {
-    name: 'Geric Gultiano',
+    name: 'Geric Lorint C. Gultiano',
     role: 'UI/UX Designer, Frontend Developer',
     bio: 'Designed the platform’s user interface for usability and responsiveness. Assisted in development and feature integration.',
     initials: 'GG',
@@ -554,7 +554,7 @@ const team = ref([
   {
     name: 'Lorenz Eric J. Papacoy',
     role: 'Support Technical Writer',
-    bio: 'Assisted in drafting and editing technical documents such as project reports. Worked closely with the project manager and developers to ensure accuracy and clarity in documentation.',
+    bio: 'Assisted in drafting and editing technical documents such as project reports.',
     initials: 'LP',
     avatar: null
   }
@@ -583,7 +583,7 @@ let carouselObserver = null
 
 // APK download configuration
 // Direct link to GitHub Release asset
-const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha_V3.0.apk')
+const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha.Final.Version.apk')
 
 // Debug function to test file accessibility
 const testFileAccess = async () => {
