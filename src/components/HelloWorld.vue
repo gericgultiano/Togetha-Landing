@@ -494,10 +494,10 @@ const features = ref([
 ])
 
 const stats = ref([
-  { value: '2M+', label: 'Notes Created' },
-  { value: '500K+', label: 'Tasks Completed' },
-  { value: '35%', label: 'Time Saved' },
-  { value: '100K+', label: 'Happy Users' }
+  { value: '20+', label: 'Notes Created' },
+  { value: '50+', label: 'Tasks Completed' },
+  { value: '70%', label: 'Time Saved' },
+  { value: '30+', label: 'Happy Users' }
 ])
 
 const testimonials = ref([
