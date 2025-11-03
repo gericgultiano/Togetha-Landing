@@ -523,32 +523,39 @@ const testimonials = ref([
 
 // Team data for Meet the Team section
 const team = ref([
+    {
+    name: 'Muriel Angelo M. Yaco',
+    role: 'Product Manager',
+    bio: 'Managed project planning and progress to ensure timely and goal-aligned completion.',
+    initials: 'MY',
+    avatar: null
+  },
   {
     name: 'Paul Bantawig',
-    role: 'Lead Developer',
-    bio: 'Frontend developer and project lead focused on UI/UX and app architecture.',
+    role: 'Systems Analyst/ Database Designer',
+    bio: 'Analyzed system requirements and helped design the database for efficiency and data integrity.',
     initials: 'PB',
     avatar: null
   },
   {
     name: 'Kobe J. Corpuz',
-    role: 'Designer',
-    bio: 'Product and visual designer responsible for interaction and brand design.',
+    role: 'Software Engineer/ Lead Developer',
+    bio: 'Developed system features across front-end and back-end. Designed the database structure for efficient storage and security.',
     initials: 'KC',
     avatar: null
   },
   {
-    name: 'Geric Lorint C. Gultiano',
-    role: 'Product Manager',
-    bio: 'Roadmap and requirements lead, connecting research with implementation.',
+    name: 'Geric Gultiano',
+    role: 'UI/UX Designer, Frontend Developer',
+    bio: 'Designed the platform’s user interface for usability and responsiveness. Assisted in development and feature integration.',
     initials: 'GG',
     avatar: null
   },
   {
-    name: 'Muriel Angelo M. Yaco',
-    role: 'Research & QA',
-    bio: 'User research and quality assurance for academic workflows.',
-    initials: 'MY',
+    name: 'Lorenz Eric J. Papacoy',
+    role: 'Support Technical Writer',
+    bio: 'Assisted in drafting and editing technical documents such as project reports. Worked closely with the project manager and developers to ensure accuracy and clarity in documentation.',
+    initials: 'LP',
     avatar: null
   }
 ])
