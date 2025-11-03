@@ -236,7 +236,7 @@
           <p class="text-lg text-muted-foreground max-w-2xl mx-auto">A small, multidisciplinary team building Togetha.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <div v-for="member in team" :key="member.name"
             class="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center">
             <div class="w-20 h-20 rounded-full bg-muted flex items-center justify-center text-xl font-semibold mb-4 overflow-hidden">
