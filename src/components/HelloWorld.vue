@@ -583,7 +583,7 @@ let carouselObserver = null
 
 // APK download configuration
 // Direct link to GitHub Release asset
-const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha.Final.Version.apk')
+const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha_Final.apk')
 
 // Debug function to test file accessibility
 const testFileAccess = async () => {
