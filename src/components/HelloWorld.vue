@@ -64,11 +64,20 @@
               The all-in-one academic platform designed specifically for Nursing, Pharmacy, and MedTech students. Streamline your studies with smart note-taking, PDF reading with annotations, task management, and an AI chatbot for study assistance—all in one unified workspace.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
-              <button @click="downloadApp" class="liquid-btn bg-white text-purple-900 hover:bg-white/90 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-xl">
-                <span class="liquid-label">Download Togetha</span>
+              <button @click="downloadApp" class="liquid-btn bg-white text-purple-900 hover:bg-white/90 px-8 py-4 rounded-lg text-base font-semibold transition-all transform hover:scale-105 shadow-xl flex flex-row items-center justify-center gap-3">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                <span class="liquid-label">Togetha_Final.apk</span>
               </button>
+
+              <!-- QR thumbnail + open modal -->
+              <div class="flex items-center gap-3">
+                <img :src="qrSrc" :alt="`QR code to download Togetha`" class="qr-thumb" loading="lazy" />
+                <button @click="showQr = true" class="text-sm text-white/90 underline">Open QR</button>
+              </div>
             </div>
-            <div class="mt-6 flex items-center justify-center lg:justify-start gap-4 text-sm text-white/80">
+            <div class="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-white/80">
               <span class="flex items-center gap-2">
                 <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -86,6 +95,12 @@
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                 </svg>
                 Built for Students
+              </span>
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 2h10a1 1 0 011 1v18a1 1 0 01-1 1H7a1 1 0 01-1-1V3a1 1 0 011-1zM12 20a1 1 0 100-2 1 1 0 000 2z" />
+                </svg>
+                Android Compatible
               </span>
             </div>
           </div>
@@ -124,6 +139,15 @@
         </div>
       </div>
     </section>
+
+    <!-- QR modal -->
+    <div v-if="showQr" class="qr-modal-backdrop" @click.self="showQr = false" role="dialog" aria-modal="true" aria-label="Download QR">
+      <div class="qr-modal">
+        <button class="qr-close" @click="showQr = false" aria-label="Close QR">✕</button>
+        <img :src="qrSrc" :alt="`QR code for ${apkUrl}`" class="qr-large" />
+        <div class="mt-4 text-sm text-muted-foreground">Scan to download the Togetha APK</div>
+      </div>
+    </div>
 
     <!-- Features Section -->
     <section id="features" class="py-20 bg-background">
@@ -280,7 +304,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div class="bg-card border border-border rounded-xl p-6">
             <h3 class="font-semibold mb-2">Contact Information</h3>
-            <p class="text-muted-foreground mb-4">Email: <a href="mailto:hello@togetha.app" class="text-primary hover:underline">hello@togetha.app</a></p>
+            <p class="text-muted-foreground mb-4">Email: <a href="mailto:hello@togetha.app" class="text-primary hover:underline">wlage35@gmail.com</a></p>
             <p class="text-muted-foreground mb-4">Location: University of the Immaculate Conception</p>
             <p class="text-muted-foreground">Prefer a call? Reply with your number and preferred time and we'll arrange it.</p>
           </div>
@@ -296,15 +320,23 @@
             </div>
             <div>
               <label for="contact-message" class="block text-sm font-medium text-muted-foreground">Message</label>
-              <textarea id="contact-message" v-model="contactMessage" rows="5" required class="mt-1 block w-full rounded-md border border-border bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+              <textarea id="contact-message" v-model="contactMessage" rows="5" required minlength="10" placeholder="Please describe your question or inquiry (minimum 10 characters)" class="mt-1 block w-full rounded-md border border-border bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
             </div>
             <div class="flex items-center justify-between">
-              <button type="submit" class="liquid-btn bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium">
-                <span class="liquid-label">Send message</span>
+              <button type="submit" :disabled="contactStatus === 'sending'" class="liquid-btn bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                <div v-if="contactStatus === 'sending'" class="flex items-center gap-2">
+                  <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="15 15" />
+                  </svg>
+                  <span class="liquid-label">Sending...</span>
+                </div>
+                <span v-else class="liquid-label">Send message</span>
               </button>
               <div class="ml-4">
-                <div v-if="contactStatus === 'sent'" class="text-sm text-primary">Message sent — thank you!</div>
-                <div v-else-if="contactStatus === 'error'" class="text-sm text-destructive">Please fill in all fields correctly.</div>
+                <div v-if="contactStatus === 'sent'" class="text-sm text-green-600">✅ Message sent successfully!</div>
+                <div v-else-if="contactStatus === 'error'" class="text-sm text-red-600">❌ Please fill in all fields correctly.</div>
+                <div v-else-if="contactStatus === 'network-error'" class="text-sm text-red-600">❌ Failed to send. Please try again.</div>
+                <div v-else-if="contactStatus === 'sending'" class="text-sm text-blue-600">📤 Sending your message...</div>
               </div>
             </div>
           </form>
@@ -360,6 +392,7 @@
 <script setup>
 // Add custom animation for gradient background
   import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import emailjs from '@emailjs/browser'
 // device frame images (user-provided PNGs)
 import frame1 from '../assets/1.png'
 import frame2 from '../assets/2.png'
@@ -585,6 +618,11 @@ let carouselObserver = null
 // Direct link to GitHub Release asset
 const apkUrl = ref('https://github.com/gericgultiano/Togetha-Landing/releases/download/v1.0.0/Togetha_Final.apk')
 
+// QR state + source (uses public QR image generator)
+const showQr = ref(false)
+const qrSize = 280
+const qrSrc = computed(() => `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(apkUrl.value)}&format=png`)
+
 // Debug function to test file accessibility
 const testFileAccess = async () => {
   try {
@@ -741,25 +779,125 @@ const contactEmail = ref('')
 const contactMessage = ref('')
 const contactStatus = ref('')
 
-function submitContact() {
-  // basic client-side validation
-  if (!contactName.value || !contactEmail.value || !contactMessage.value) {
+// EmailJS Configuration
+// Replace these with your actual EmailJS credentials
+const EMAILJS_CONFIG = {
+  serviceId: 'service_8u1q1eu', // Replace with your EmailJS service ID
+  templateId: 'template_k94k1qq', // Replace with your EmailJS template ID
+  publicKey: '5_oMGQSKEJ5zBfYmG' // Replace with your EmailJS public key
+}
+
+// Enhanced email validation
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+// Rate limiting - prevent spam
+let lastSubmissionTime = 0
+const RATE_LIMIT_MS = 60000 // 1 minute
+
+function canSubmit() {
+  const now = Date.now()
+  if (now - lastSubmissionTime < RATE_LIMIT_MS) {
+    const remainingTime = Math.ceil((RATE_LIMIT_MS - (now - lastSubmissionTime)) / 1000)
+    contactStatus.value = `rate-limit-${remainingTime}`
+    setTimeout(() => (contactStatus.value = ''), 3000)
+    return false
+  }
+  return true
+}
+
+async function submitContact() {
+  // Clear any existing status
+  contactStatus.value = ''
+  
+  // Comprehensive client-side validation
+  if (!contactName.value.trim()) {
     contactStatus.value = 'error'
     setTimeout(() => (contactStatus.value = ''), 3000)
     return
   }
-
-  const subject = `Contact from ${contactName.value}`
-  const body = `${contactMessage.value}\n\nName: ${contactName.value}\nEmail: ${contactEmail.value}`
-  // open user's email client as a simple submission fallback
-  window.location.href = `mailto:hello@togetha.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-  contactStatus.value = 'sent'
-  // clear form
-  contactName.value = ''
-  contactEmail.value = ''
-  contactMessage.value = ''
-  setTimeout(() => (contactStatus.value = ''), 5000)
+  
+  if (!contactEmail.value.trim() || !isValidEmail(contactEmail.value)) {
+    contactStatus.value = 'error'
+    setTimeout(() => (contactStatus.value = ''), 3000)
+    return
+  }
+  
+  if (!contactMessage.value.trim() || contactMessage.value.trim().length < 10) {
+    contactStatus.value = 'error'
+    setTimeout(() => (contactStatus.value = ''), 3000)
+    return
+  }
+  
+  // Rate limiting check
+  if (!canSubmit()) {
+    return
+  }
+  
+  try {
+    contactStatus.value = 'sending'
+    lastSubmissionTime = Date.now()
+    
+    // Initialize EmailJS if not already done
+    if (!emailjs || typeof emailjs.init !== 'function') {
+      throw new Error('EmailJS not properly initialized')
+    }
+    
+    // Initialize with public key
+    emailjs.init(EMAILJS_CONFIG.publicKey)
+    
+    // Prepare email template parameters
+    const templateParams = {
+      from_name: contactName.value.trim(),
+      from_email: contactEmail.value.trim(),
+      message: contactMessage.value.trim(),
+      to_email: 'hello@togetha.app',
+      reply_to: contactEmail.value.trim(),
+      subject: `Contact from ${contactName.value.trim()} - Togetha Landing Page`
+    }
+    
+    // Send email via EmailJS
+    const response = await emailjs.send(
+      EMAILJS_CONFIG.serviceId,
+      EMAILJS_CONFIG.templateId,
+      templateParams
+    )
+    
+    if (response.status === 200) {
+      contactStatus.value = 'sent'
+      
+      // Clear form on successful submission
+      contactName.value = ''
+      contactEmail.value = ''
+      contactMessage.value = ''
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        contactStatus.value = ''
+      }, 5000)
+      
+    } else {
+      throw new Error(`EmailJS returned status: ${response.status}`)
+    }
+    
+  } catch (error) {
+    console.error('Email sending failed:', error)
+    contactStatus.value = 'network-error'
+    
+    // Fallback to mailto link if EmailJS fails
+    setTimeout(() => {
+      const subject = `Contact from ${contactName.value.trim()}`
+      const body = `${contactMessage.value.trim()}\n\nName: ${contactName.value.trim()}\nEmail: ${contactEmail.value.trim()}`
+      window.open(`mailto:hello@togetha.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`)
+    }, 2000)
+    
+    // Clear error message after 5 seconds
+    setTimeout(() => {
+      contactStatus.value = ''
+    }, 5000)
+  }
 }
 </script>
 
@@ -873,17 +1011,92 @@ function submitContact() {
 .py-20.bg-muted .text-primary { color: #7c3aed }
 
 /* ---------- Liquid button polish ---------- */
-.liquid-btn { position: relative; overflow: hidden; display: inline-block }
+.liquid-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center }
 .liquid-btn .liquid-label { position: relative; z-index: 2; display:inline-block }
 .liquid-btn::before, .liquid-btn::after { content:''; position:absolute; z-index:1; width:160%; height:160%; left:-30%; top:-50%; background: radial-gradient(circle at 25% 35%, rgba(255,255,255,0.14), transparent 12%), radial-gradient(circle at 80% 75%, rgba(255,255,255,0.06), transparent 18%); transform:translate3d(0,0,0) scale(1); transition: transform 420ms cubic-bezier(.2,.9,.2,1), opacity 420ms; filter: blur(14px); opacity:0.9 }
 .liquid-btn::after { left:-10%; top:-30%; opacity:0.5; filter: blur(20px) saturate(110%) }
 .liquid-btn:hover::before, .liquid-btn:focus-visible::before { transform: translate3d(6px,6px,0) scale(1.04) rotate(3deg) }
 .liquid-btn:hover::after, .liquid-btn:focus-visible::after { transform: translate3d(-6px,-6px,0) scale(1.02) rotate(-4deg); opacity:0.86 }
 
+/* QR thumbnail + modal */
+.qr-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: white;
+  padding: 4px;
+}
+.qr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(2,6,23,0.6);
+  z-index: 60;
+  padding: 20px;
+}
+.qr-modal {
+  background: var(--card-bg, rgba(255,255,255,0.03));
+  border-radius: 12px;
+  padding: 18px;
+  text-align:center;
+  position:relative;
+  max-width: 360px;
+  width:100%;
+  box-shadow: 0 12px 40px rgba(8,7,22,0.6);
+}
+.qr-large { width: 100%; max-width: 320px; height: auto; border-radius: 8px; background:white; padding:8px; }
+.qr-close {
+  position:absolute;
+  right:10px;
+  top:8px;
+  background:transparent;
+  border:none;
+  color:var(--muted, #ddd);
+  font-size:18px;
+  cursor:pointer;
+}
+
 /* keyboard focus */
-button:focus-visible, .control:focus-visible, .indicator:focus-visible { outline: 3px solid rgba(124,58,237,0.14); outline-offset: 3px }
+button:focus-visible, .control:focus-visible, .indicator:focus-visible, .qr-close:focus-visible { outline: 3px solid rgba(124,58,237,0.14); outline-offset: 3px }
 
+/* Contact form enhancements */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+button:disabled:hover {
+  background-color: inherit;
+  transform: none !important;
+}
+
+/* Enhanced form validation styles */
+input:invalid, textarea:invalid {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+input:valid, textarea:valid {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Status message animations */
+.text-green-600, .text-red-600, .text-blue-600 {
+  animation: fade-up 300ms ease-out;
+}
 
 /* small utility */
 .fade-in-delayed { animation: fade-up 680ms cubic-bezier(.2,.9,.2,1) 120ms both }
